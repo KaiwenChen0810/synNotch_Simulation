@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompuCell3D Revision="20210612" Version="4.2.5">
+
+    <Metadata>
+        <NumberOfProcessors>1</NumberOfProcessors>
+        <DebugOutputFrequency>100</DebugOutputFrequency>
+    </Metadata>
+
+    <Potts>
+        <Dimensions x="120" y="120" z="1"/>
+        <Steps>8000</Steps>
+        <Temperature>25.0</Temperature>
+        <NeighborOrder>2</NeighborOrder>
+        <!-- Optimized motility for sequential ring formation -->
+        <!-- <CellMotility> -->
+            <!-- <MotilityParameters CellType="AUninduced" Motility="20"/> -->
+            <!-- <MotilityParameters CellType="AInduced" Motility="25"/> -->
+            <!-- <MotilityParameters CellType="BUninduced" Motility="20"/> -->
+            <!-- <MotilityParameters CellType="BInduced" Motility="15"/> -->
+        <!-- </CellMotility> -->
+    </Potts>
+
+    <!-- Cell types for the synNotch circuit -->
+    <Plugin Name="CellType">
+        <CellType TypeId="0" TypeName="Medium"/>
+        <CellType TypeId="1" TypeName="AUninduced"/>
+        <CellType TypeId="2" TypeName="AInduced"/>
+        <CellType TypeId="3" TypeName="BUninduced"/>
+        <CellType TypeId="4" TypeName="BInduced"/>
+    </Plugin>
+
+    <!-- Reduced volume for smaller cells - more cells in same area -->
+    <Plugin Name="Volume">
+        <TargetVolume>25</TargetVolume>
+        <LambdaVolume>2</LambdaVolume>
+    </Plugin>
+
+    <Plugin Name="Surface">
+       <TargetSurface>  40 </TargetSurface>   <!-- approx. surface of a 25-pixel disc -->
+       <LambdaSurface>  4 </LambdaSurface>
+    </Plugin>
+
+    <!-- Initialize blob of A uninduced cells with gaps -->
+    <Steppable Type="BlobInitializer">
+        <Region>
+            <Center x="60" y="60" z="0"/>
+            <Radius>20</Radius>
+            <Gap>1</Gap>
+            <Width>4</Width>
+            <Types>AUninduced</Types>
+        </Region>
+    </Steppable>
+
+    <!-- CORRECTED differential adhesion based on CC3D successful examples -->
+    <!-- Contact energies: Lower = stronger adhesion = inner layer -->
+    <!-- Updated for biological reality: small E-cad differences have noticeable effects -->
+    <Plugin Name="Contact">
+        <!-- Medium interactions (based on successful CC3D examples) -->
+        <Energy Type1="Medium" Type2="Medium">0.0</Energy>
+        <Energy Type1="Medium" Type2="AUninduced">14.0</Energy>
+        <Energy Type1="Medium" Type2="AInduced">14.0</Energy>
+        <Energy Type1="Medium" Type2="BUninduced">14.0</Energy>
+        <Energy Type1="Medium" Type2="BInduced">14.0</Energy>
+        
+        <!-- BIOLOGICAL ADHESION HIERARCHY: Small E-cad differences create sorting -->
+        
+        <!-- Homotypic -->
+        <Energy Type1="BInduced" Type2="BInduced">0</Energy>
+        <Energy Type1="AInduced" Type2="AInduced">8</Energy>
+
+        <Energy Type1="AUninduced" Type2="AUninduced">14.0</Energy>
+        <Energy Type1="BUninduced" Type2="BUninduced">14.0</Energy>   
+        <Energy Type1="AUninduced" Type2="BUninduced">14.0</Energy>
+
+        <!-- Heterotypic -->   
+        <Energy Type1="AInduced" Type2="BInduced">4</Energy>
+        
+        <!-- Cross-type interactions (intermediate values) -->
+        <Energy Type1="AUninduced" Type2="AInduced">14.0</Energy>
+        <Energy Type1="AUninduced" Type2="BInduced">14.0</Energy>
+        <Energy Type1="AInduced" Type2="BUninduced">10.0</Energy>
+        <Energy Type1="BUninduced" Type2="BInduced">10.0</Energy>
+        
+        <NeighborOrder>2</NeighborOrder>
+    </Plugin>
+
+    <!-- Prevents fragmentation – keeps every cell as one contiguous blob -->
+    <!-- <Plugin Name="ConnectivityGlobal">
+        <Penalty Type="AUninduced">10000</Penalty>
+        <Penalty Type="AInduced">10000</Penalty>
+        <Penalty Type="BUninduced">10000</Penalty>
+        <Penalty Type="BInduced">10000</Penalty>
+    </Plugin> -->
+
+    <!-- Center of mass tracking for motility -->
+    <Plugin Name="CenterOfMass"/>
+
+    <!-- Neighbor tracking for cell-cell signaling -->
+    <Plugin Name="NeighborTracker"/>
+
+    <!-- Pixel tracking for contact-dependent signaling -->
+    <Plugin Name="PixelTracker"/>
+
+    <!-- NO SECRETION OR DIFFUSION FIELDS -->
+    <!-- Both CD19 and GFP are surface-tethered, contact-dependent signals -->
+
+    <!-- Custom 5:1 ratio initialization will be handled in Python -->
+
+</CompuCell3D> 
