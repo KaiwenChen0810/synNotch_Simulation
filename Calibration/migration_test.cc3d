@@ -1,0 +1,5 @@
+<Simulation version="4.0.0">
+   <XMLScript Type="XMLScript">Simulation/migration_test.xml</XMLScript>
+   <PythonScript Type="PythonScript">Simulation/migration_test.py</PythonScript>
+   <Resource Type="Python">Simulation/migration_steppables.py</Resource>
+</Simulation> 
