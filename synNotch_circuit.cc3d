@@ -1,0 +1,6 @@
+<Simulation Version="4.2.5">
+    <XMLScript Type="XMLScript">Simulation/synNotch_circuit.xml</XMLScript>
+    <PythonScript Type="PythonScript">Simulation/synNotch_circuit.py</PythonScript>
+    <Resource Type="Python">Simulation/synNotch_steppables.py</Resource>
+    <Resource Type="Python">Simulation/contact_debugger.py</Resource>
+</Simulation> 
