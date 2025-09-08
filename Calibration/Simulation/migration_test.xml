@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompuCell3D Revision="20210612" Version="4.2.5">
+
+    <Metadata>
+        <NumberOfProcessors>1</NumberOfProcessors>
+        <DebugOutputFrequency>100</DebugOutputFrequency>
+    </Metadata>
+
+    <Potts>
+        <Dimensions x="120" y="120" z="1"/>
+        <Steps>200</Steps>
+        <Temperature>25.0</Temperature>
+        <NeighborOrder>2</NeighborOrder>
+    </Potts>
+
+    <!-- Cell types for migration test -->
+    <Plugin Name="CellType">
+        <CellType TypeId="0" TypeName="Medium"/>
+        <CellType TypeId="1" TypeName="L929Cell"/>
+    </Plugin>
+
+    <!-- Same volume as main simulation -->
+    <Plugin Name="Volume">
+        <VolumeEnergyParameters CellType="L929Cell" LambdaVolume="2" TargetVolume="25"/>
+    </Plugin>
+
+    <!-- Minimal adhesion - just cell-medium interaction -->
+    <Plugin Name="Contact">
+        <Energy Type1="Medium" Type2="Medium">0.0</Energy>
+        <Energy Type1="Medium" Type2="L929Cell">16.0</Energy>
+        <Energy Type1="L929Cell" Type2="L929Cell">2.0</Energy>
+        <NeighborOrder>2</NeighborOrder>
+    </Plugin>
+
+    <!-- Initialize scattered cells for migration measurement -->
+    <Steppable Type="BlobInitializer">
+        <Region>
+            <Center x="60" y="60" z="0"/>
+            <Radius>40</Radius>
+            <Gap>10</Gap>
+            <Width>3</Width>
+            <Types>L929Cell</Types>
+        </Region>
+    </Steppable>
+
+    <!-- Center of mass tracking -->
+    <Plugin Name="CenterOfMass"/>
+
+</CompuCell3D> 
