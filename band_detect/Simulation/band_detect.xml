@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompuCell3D Revision="20210612" Version="4.2.5">
+
+    <Metadata>
+        <NumberOfProcessors>1</NumberOfProcessors>
+        <DebugOutputFrequency>100</DebugOutputFrequency>
+    </Metadata>
+
+    <Potts>
+        <Dimensions x="120" y="120" z="1"/>
+        <Steps>9000</Steps>
+        <Temperature>20.0</Temperature>
+        <NeighborOrder>2</NeighborOrder>
+        <Flip2DimRatio>1.0</Flip2DimRatio>
+    </Potts>
+
+    <Plugin Name="CellType">
+        <CellType TypeId="0" TypeName="Medium"/>
+        <CellType TypeId="1" TypeName="Sender"/>
+        <CellType TypeId="2" TypeName="Receiver"/>
+    </Plugin>
+
+    <Plugin Name="Volume">
+        <TargetVolume>15</TargetVolume>
+        <LambdaVolume>3.5</LambdaVolume>
+    </Plugin>
+
+
+    <Plugin Name="Contact">
+        <NeighborOrder>2</NeighborOrder>
+        <Energy Type1="Medium"  Type2="Medium">0.0</Energy>
+        <Energy Type1="Sender"  Type2="Medium">12.0</Energy>
+        <Energy Type1="Receiver" Type2="Medium">12.0</Energy>
+        <Energy Type1="Sender"  Type2="Sender">2.0</Energy>
+        <Energy Type1="Receiver" Type2="Receiver">10.0</Energy>
+        <Energy Type1="Sender"  Type2="Receiver">11.0</Energy>
+    </Plugin>
+
+    <Plugin Name="CenterOfMass"/>
+    <Plugin Name="NeighborTracker"/>
+    <Plugin Name="PixelTracker"/>
+
+    <Steppable Type="DiffusionSolverFE">
+        <DiffusionField Name="AHL">
+            <DiffusionData>
+                <GlobalDiffusionConstant>0.18</GlobalDiffusionConstant>
+                <GlobalDecayConstant>2.5e-4</GlobalDecayConstant>
+                <Boundary_x>NoFlux</Boundary_x>
+                <Boundary_y>NoFlux</Boundary_y>
+            </DiffusionData>
+            <SecretionData>
+                <Secretion Type="Sender">0.016</Secretion>
+            </SecretionData>
+        </DiffusionField>
+    </Steppable>
+
+    <Plugin Name="Connectivity">
+        <Penalty>1000000000</Penalty>
+    </Plugin>
+</CompuCell3D>
+
