@@ -1,0 +1,6 @@
+<Simulation Version="4.6.0">
+    <XMLScript Type="XMLScript">Simulation/band_detect.xml</XMLScript>
+    <PythonScript Type="PythonScript">Simulation/band_detect.py</PythonScript>
+    <Resource Type="Python">Simulation/band_detect_steppables.py</Resource>
+</Simulation>
+
